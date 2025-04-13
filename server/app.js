@@ -5,6 +5,7 @@ import mongoose from 'mongoose';
 import orderRoutes from './route/order.route.js';
 import momoRoutes from './route/momo.route.js';
 import cryptoPaymentRoutes from './route/cryptoPayment.route.js';
+import vnpayRoutes from './route/vnpay.route.js';
 // ... other imports
 
 const app = express();
@@ -27,6 +28,7 @@ app.use(express.urlencoded({ extended: true }));
 app.use('/api/order', orderRoutes);
 app.use('/api/momo', momoRoutes);
 app.use('/api/crypto', cryptoPaymentRoutes);
+app.use('/api/vnpay', vnpayRoutes);
 // ... other routes
 
 export default app; 

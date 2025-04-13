@@ -14,7 +14,7 @@ import cartRouter from './route/cart.route.js'
 import addressRouter from './route/address.route.js'
 import orderRouter from './route/order.route.js'
 import momoRouter from './route/momo.route.js'
-import vnpayRoute from "./route/vnpayRoute.js"
+import vnpayRoute from "./route/vnpay.route.js"
 
 dotenv.config()
 const app = express()

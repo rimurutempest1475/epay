@@ -10,7 +10,7 @@ import toast from 'react-hot-toast'
 import { useNavigate } from 'react-router-dom'
 import { loadStripe } from '@stripe/stripe-js'
 import axios from 'axios'
-import { createOrder, createStripePayment, createMomoPayment, createCryptoPayment } from "../redux/actions/orderAction";
+import { createOrder, createStripePayment, createMomoPayment, createCryptoPayment,createVNPayPayment } from "../redux/actions/orderAction";
 
 const CheckoutPage = () => {
   const { notDiscountTotalPrice, totalPrice, totalQty, fetchCartItem, fetchOrder, user } = useGlobalContext()
@@ -187,6 +187,8 @@ const CheckoutPage = () => {
             dispatch(createMomoPayment(orderData));
         } else if (paymentMethod === "crypto") {
             dispatch(createCryptoPayment(orderData));
+        } else if (paymentMethod === "vnpay") {
+            dispatch(createVNPayPayment(orderData));
         }
     } catch (error) {
         console.error("Payment error:", error);
@@ -320,7 +322,22 @@ const CheckoutPage = () => {
                     <label htmlFor="crypto" className="text-gray-700">
                         Thanh toán bằng tiền điện tử (Bitcoin, Ethereum, etc.)
                     </label>
-                </div>
+                  </div>
+
+                <div className="flex items-center gap-2">
+                    <input
+                        type="radio"
+                        name="payment"
+                        id="vnpay"
+                        value="vnpay"
+                        checked={paymentMethod === "vnpay"}
+                        onChange={(e) => setPaymentMethod(e.target.value)}
+                        className="form-radio"
+                    />
+                    <label htmlFor="vnpay" className="text-gray-700">
+                        Thanh toán qua VNPay
+                    </label>
+                </div>        
             </div>
 
             <button
