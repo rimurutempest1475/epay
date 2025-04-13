@@ -1,15 +1,21 @@
 import axios from "axios";
 import SummaryApi , { baseURL } from "../common/SummaryApi";
 
-const Axios = axios.create({
-    baseURL : baseURL,
-    withCredentials : true
+const instance = axios.create({
+    baseURL: process.env.NODE_ENV === 'production' 
+        ? 'https://your-app.onrender.com'  // Thay thế bằng URL Render của bạn
+        : 'http://localhost:8080',
+    withCredentials: true,
+    timeout: 10000,
+    headers: {
+        'Content-Type': 'application/json'
+    }
 })
 
 //sending access token in the header
-Axios.interceptors.request.use(
+instance.interceptors.request.use(
     async(config)=>{
-        const accessToken = localStorage.getItem('accesstoken')
+        const accessToken = localStorage.getItem('accessToken')
 
         if(accessToken){
             config.headers.Authorization = `Bearer ${accessToken}`
@@ -24,7 +30,7 @@ Axios.interceptors.request.use(
 
 //extend the life span of access token with 
 // the help refresh
-Axios.interceptors.request.use(
+instance.interceptors.request.use(
     (response)=>{
         return response
     },
@@ -41,7 +47,7 @@ Axios.interceptors.request.use(
 
                 if(newAccessToken){
                     originRequest.headers.Authorization = `Bearer ${newAccessToken}`
-                    return Axios(originRequest)
+                    return instance(originRequest)
                 }
             }
         }
@@ -53,7 +59,7 @@ Axios.interceptors.request.use(
 
 const refreshAccessToken = async(refreshToken)=>{
     try {
-        const response = await Axios({
+        const response = await instance({
             ...SummaryApi.refreshToken,
             headers : {
                 Authorization : `Bearer ${refreshToken}`
@@ -68,4 +74,4 @@ const refreshAccessToken = async(refreshToken)=>{
     }
 }
 
-export default Axios
+export default instance

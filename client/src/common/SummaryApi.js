@@ -149,9 +149,25 @@ const SummaryApi = {
         url : "/api/order/checkout",
         method : 'post'
     },
+    vnpay_payment_url: {  
+        method: 'POST',  
+        url: '/api/v1/payments/vnpay/create_payment_url',  
+    },
     getOrderItems : {
         url : '/api/order/order-list',
         method : 'get'
+    },
+    create_momo_payment: {
+        url: '/api/order/create-momo-payment',
+        method: 'POST'
+    },
+    check_order_status: {
+        url: '/api/order/check-status',
+        method: 'GET'
+    },
+    create_crypto_payment: {
+        url: '/api/crypto/create-charge',
+        method: 'POST'
     }
 }
 

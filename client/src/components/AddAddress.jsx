@@ -45,14 +45,14 @@ const AddAddress = ({close}) => {
     <section className='bg-black fixed top-0 left-0 right-0 bottom-0 z-50 bg-opacity-70 h-screen overflow-auto'>
         <div className='bg-white p-4 w-full max-w-lg mt-8 mx-auto rounded'>
             <div className='flex justify-between items-center gap-4'>
-                <h2 className='font-semibold'>Add Address</h2>
+                <h2 className='font-semibold'>Thêm địa chỉ</h2>
                 <button onClick={close} className='hover:text-red-500'>
                     <IoClose  size={25}/>
                 </button>
             </div>
             <form className='mt-4 grid gap-4' onSubmit={handleSubmit(onSubmit)}>
                 <div className='grid gap-1'>
-                    <label htmlFor='addressline'>Address Line :</label>
+                    <label htmlFor='addressline'>Địa chỉ :</label>
                     <input
                         type='text'
                         id='addressline' 
@@ -61,7 +61,7 @@ const AddAddress = ({close}) => {
                     />
                 </div>
                 <div className='grid gap-1'>
-                    <label htmlFor='city'>City :</label>
+                    <label htmlFor='city'>Thành phố/ Huyện/ Thị xã :</label>
                     <input
                         type='text'
                         id='city' 
@@ -70,7 +70,7 @@ const AddAddress = ({close}) => {
                     />
                 </div>
                 <div className='grid gap-1'>
-                    <label htmlFor='state'>State :</label>
+                    <label htmlFor='state'>Tỉnh/ Thành phố :</label>
                     <input
                         type='text'
                         id='state' 
@@ -88,7 +88,7 @@ const AddAddress = ({close}) => {
                     />
                 </div>
                 <div className='grid gap-1'>
-                    <label htmlFor='country'>Country :</label>
+                    <label htmlFor='country'>Quốc Gia :</label>
                     <input
                         type='text'
                         id='country' 
@@ -97,7 +97,7 @@ const AddAddress = ({close}) => {
                     />
                 </div>
                 <div className='grid gap-1'>
-                    <label htmlFor='mobile'>Mobile No. :</label>
+                    <label htmlFor='mobile'>Số điện thoại :</label>
                     <input
                         type='text'
                         id='mobile' 

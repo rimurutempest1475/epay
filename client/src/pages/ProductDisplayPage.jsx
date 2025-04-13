@@ -104,11 +104,11 @@ const ProductDisplayPage = () => {
 
             <div className='my-4  hidden lg:grid gap-3 '>
                 <div>
-                    <p className='font-semibold'>Description</p>
+                    <p className='font-semibold'>Mô tả sản phẩm</p>
                     <p className='text-base'>{data.description}</p>
                 </div>
                 <div>
-                    <p className='font-semibold'>Unit</p>
+                    <p className='font-semibold'>Đơn vị tính</p>
                     <p className='text-base'>{data.unit}</p>
                 </div>
                 {
@@ -126,14 +126,14 @@ const ProductDisplayPage = () => {
 
 
         <div className='p-4 lg:pl-7 text-base lg:text-lg'>
-            <p className='bg-green-300 w-fit px-2 rounded-full'>10 Min</p>
+            <p className='bg-[#E78A8C] w-fit px-2 rounded-full'>4U Cosmetics</p>
             <h2 className='text-lg font-semibold lg:text-3xl'>{data.name}</h2>  
             <p className=''>{data.unit}</p> 
             <Divider/>
             <div>
-              <p className=''>Price</p> 
+              <p className=''>Giá</p> 
               <div className='flex items-center gap-2 lg:gap-4'>
-                <div className='border border-green-600 px-4 py-2 rounded bg-green-50 w-fit'>
+                <div className='border border-[#E78A8C] px-4 py-2 rounded bg-green-50 w-fit'>
                     <p className='font-semibold text-lg lg:text-xl'>{DisplayPriceInRupees(pricewithDiscount(data.price,data.discount))}</p>
                 </div>
                 {
@@ -143,7 +143,7 @@ const ProductDisplayPage = () => {
                 }
                 {
                   data.discount && (
-                    <p className="font-bold text-green-600 lg:text-2xl">{data.discount}% <span className='text-base text-neutral-500'>Discount</span></p>
+                    <p className="font-bold text-[#E78A8C] lg:text-2xl">{data.discount}% <span className='text-base text-neutral-500'>Giảm giá</span></p>
                   )
                 }
                 
@@ -153,10 +153,10 @@ const ProductDisplayPage = () => {
               
               {
                 data.stock === 0 ? (
-                  <p className='text-lg text-red-500 my-2'>Out of Stock</p>
+                  <p className='text-lg text-red-500 my-2'>Hết hàng</p>
                 ) 
                 : (
-                  // <button className='my-4 px-4 py-1 bg-green-600 hover:bg-green-700 text-white rounded'>Add</button>
+                  //<button className='my-4 px-4 py-1 bg-[#E78A8C] hover:bg-green-700 text-white rounded'>Add</button>
                   <div className='my-4'>
                     <AddToCartButton data={data}/>
                   </div>
@@ -164,7 +164,7 @@ const ProductDisplayPage = () => {
               }
            
 
-            <h2 className='font-semibold'>Why shop from binkeyit? </h2>
+            <h2 className='font-semibold'>Tại sao lại lựa chọn 4U Cosmetics? </h2>
             <div>
                   <div className='flex  items-center gap-4 my-4'>
                       <img
@@ -173,8 +173,8 @@ const ProductDisplayPage = () => {
                         className='w-20 h-20'
                       />
                       <div className='text-sm'>
-                        <div className='font-semibold'>Superfast Delivery</div>
-                        <p>Get your orer delivered to your doorstep at the earliest from dark stores near you.</p>
+                        <div className='font-semibold'>Giao hàng siêu nhanh</div>
+                        <p>Nhận đơn hàng được giao đến tận nhà bạn chậm nhất từ 3-5 ngày.</p>
                       </div>
                   </div>
                   <div className='flex  items-center gap-4 my-4'>
@@ -184,8 +184,8 @@ const ProductDisplayPage = () => {
                         className='w-20 h-20'
                       />
                       <div className='text-sm'>
-                        <div className='font-semibold'>Best Prices & Offers</div>
-                        <p>Best price destination with offers directly from the nanufacturers.</p>
+                        <div className='font-semibold'>Giá cả cạnh tranh</div>
+                        <p>Có giá tốt nhất với ưu đãi trực tiếp từ nhà sản xuất.</p>
                       </div>
                   </div>
                   <div className='flex  items-center gap-4 my-4'>
@@ -195,8 +195,8 @@ const ProductDisplayPage = () => {
                         className='w-20 h-20'
                       />
                       <div className='text-sm'>
-                        <div className='font-semibold'>Wide Assortment</div>
-                        <p>Choose from 5000+ products across food personal care, household & other categories.</p>
+                        <div className='font-semibold'>Đa dạng sản phẩm</div>
+                        <p>Cho bạn nhiều sự lựa chọn về mỹ phẩm !</p>
                       </div>
                   </div>
             </div>
@@ -204,11 +204,11 @@ const ProductDisplayPage = () => {
             {/****only mobile */}
             <div className='my-4 grid gap-3 '>
                 <div>
-                    <p className='font-semibold'>Description</p>
+                    <p className='font-semibold'>Mô tả</p>
                     <p className='text-base'>{data.description}</p>
                 </div>
                 <div>
-                    <p className='font-semibold'>Unit</p>
+                    <p className='font-semibold'>Đơn vị tính</p>
                     <p className='text-base'>{data.unit}</p>
                 </div>
                 {

@@ -79,7 +79,7 @@ const ProductAdmin = () => {
   return (
     <section className=''>
         <div className='p-2  bg-white shadow-md flex items-center justify-between gap-4'>
-                <h2 className='font-semibold'>Product</h2>
+                <h2 className='font-semibold'>Sản phẩm</h2>
                 <div className='h-full min-w-24 max-w-56 w-full ml-auto bg-blue-50 px-4 flex items-center gap-3 py-2 rounded  border focus-within:border-primary-200'>
                   <IoSearchOutline size={25}/>
                   <input
@@ -114,9 +114,9 @@ const ProductAdmin = () => {
             </div>
             
             <div className='flex justify-between my-4'>
-              <button onClick={handlePrevious} className="border border-primary-200 px-4 py-1 hover:bg-primary-200">Previous</button>
+              <button onClick={handlePrevious} className="border border-primary-200 px-4 py-1 hover:bg-primary-200">Trước</button>
               <button className='w-full bg-slate-100'>{page}/{totalPageCount}</button>
-              <button onClick={handleNext} className="border border-primary-200 px-4 py-1 hover:bg-primary-200">Next</button>
+              <button onClick={handleNext} className="border border-primary-200 px-4 py-1 hover:bg-primary-200">Sau</button>
             </div>
 
         </div>

@@ -41,6 +41,10 @@ const orderSchema = new mongoose.Schema({
     invoice_receipt : {
         type : String,
         default : ""
+    },
+    transactionId: {
+        type: String,
+        default: null
     }
 },{
     timestamps : true

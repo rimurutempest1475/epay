@@ -21,13 +21,13 @@ const CartMobileLink = () => {
                             <FaCartShopping/>
                         </div>
                         <div className='text-xs'>
-                                <p>{totalQty} items</p>
+                                <p>{totalQty} sản phẩm</p>
                                 <p>{DisplayPriceInRupees(totalPrice)}</p>
                         </div>
                     </div>
 
                     <Link to={"/cart"} className='flex items-center gap-1'>
-                        <span className='text-sm'>View Cart</span>
+                        <span className='text-sm'>Xem giỏ hàng</span>
                         <FaCaretRight/>
                     </Link>
                 </div>

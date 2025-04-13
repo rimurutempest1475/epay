@@ -153,7 +153,7 @@ const EditProductAdmin = ({ close ,data : propsData,fetchProductData}) => {
       <div className='bg-white w-full p-4 max-w-2xl mx-auto rounded overflow-y-auto h-full max-h-[95vh]'>
         <section className=''>
           <div className='p-2   bg-white shadow-md flex items-center justify-between'>
-            <h2 className='font-semibold'>Upload Product</h2>
+            <h2 className='font-semibold'>Tải lên sản phẩm</h2>
             <button onClick={close}>
               <IoClose size={20}/>
             </button>
@@ -161,7 +161,7 @@ const EditProductAdmin = ({ close ,data : propsData,fetchProductData}) => {
           <div className='grid p-3'>
             <form className='grid gap-4' onSubmit={handleSubmit}>
               <div className='grid gap-1'>
-                <label htmlFor='name' className='font-medium'>Name</label>
+                <label htmlFor='name' className='font-medium'>Tên</label>
                 <input
                   id='name'
                   type='text'
@@ -174,7 +174,7 @@ const EditProductAdmin = ({ close ,data : propsData,fetchProductData}) => {
                 />
               </div>
               <div className='grid gap-1'>
-                <label htmlFor='description' className='font-medium'>Description</label>
+                <label htmlFor='description' className='font-medium'>Mô tả sản phẩm</label>
                 <textarea
                   id='description'
                   type='text'
@@ -189,7 +189,7 @@ const EditProductAdmin = ({ close ,data : propsData,fetchProductData}) => {
                 />
               </div>
               <div>
-                <p className='font-medium'>Image</p>
+                <p className='font-medium'>Hình ảnh</p>
                 <div>
                   <label htmlFor='productImage' className='bg-blue-50 h-24 border rounded flex justify-center items-center cursor-pointer'>
                     <div className='text-center flex justify-center items-center flex-col'>
@@ -197,7 +197,7 @@ const EditProductAdmin = ({ close ,data : propsData,fetchProductData}) => {
                         imageLoading ? <Loading /> : (
                           <>
                             <FaCloudUploadAlt size={35} />
-                            <p>Upload Image</p>
+                            <p>Tải lên hình ảnh sản phẩm</p>
                           </>
                         )
                       }
@@ -234,7 +234,7 @@ const EditProductAdmin = ({ close ,data : propsData,fetchProductData}) => {
 
               </div>
               <div className='grid gap-1'>
-                <label className='font-medium'>Category</label>
+                <label className='font-medium'>Danh mục sản phẩm</label>
                 <div>
                   <select
                     className='bg-blue-50 border w-full p-2 rounded'
@@ -252,7 +252,7 @@ const EditProductAdmin = ({ close ,data : propsData,fetchProductData}) => {
                       setSelectCategory("")
                     }}
                   >
-                    <option value={""}>Select Category</option>
+                    <option value={""}>Chọn danh mục</option>
                     {
                       allCategory.map((c, index) => {
                         return (
@@ -278,7 +278,7 @@ const EditProductAdmin = ({ close ,data : propsData,fetchProductData}) => {
                 </div>
               </div>
               <div className='grid gap-1'>
-                <label className='font-medium'>Sub Category</label>
+                <label className='font-medium'>Danh mục phụ</label>
                 <div>
                   <select
                     className='bg-blue-50 border w-full p-2 rounded'
@@ -296,7 +296,7 @@ const EditProductAdmin = ({ close ,data : propsData,fetchProductData}) => {
                       setSelectSubCategory("")
                     }}
                   >
-                    <option value={""} className='text-neutral-600'>Select Sub Category</option>
+                    <option value={""} className='text-neutral-600'>Lựa chọn danh mục phụ</option>
                     {
                       allSubCategory.map((c, index) => {
                         return (
@@ -323,7 +323,7 @@ const EditProductAdmin = ({ close ,data : propsData,fetchProductData}) => {
               </div>
 
               <div className='grid gap-1'>
-                <label htmlFor='unit' className='font-medium'>Unit</label>
+                <label htmlFor='unit' className='font-medium'>Đơn vị</label>
                 <input
                   id='unit'
                   type='text'
@@ -337,7 +337,7 @@ const EditProductAdmin = ({ close ,data : propsData,fetchProductData}) => {
               </div>
 
               <div className='grid gap-1'>
-                <label htmlFor='stock' className='font-medium'>Number of Stock</label>
+                <label htmlFor='stock' className='font-medium'>Số lượng tồn kho</label>
                 <input
                   id='stock'
                   type='number'
@@ -351,7 +351,7 @@ const EditProductAdmin = ({ close ,data : propsData,fetchProductData}) => {
               </div>
 
               <div className='grid gap-1'>
-                <label htmlFor='price' className='font-medium'>Price</label>
+                <label htmlFor='price' className='font-medium'>Giá</label>
                 <input
                   id='price'
                   type='number'
@@ -365,7 +365,7 @@ const EditProductAdmin = ({ close ,data : propsData,fetchProductData}) => {
               </div>
 
               <div className='grid gap-1'>
-                <label htmlFor='discount' className='font-medium'>Discount</label>
+                <label htmlFor='discount' className='font-medium'>Giá giảm</label>
                 <input
                   id='discount'
                   type='number'
@@ -410,13 +410,13 @@ const EditProductAdmin = ({ close ,data : propsData,fetchProductData}) => {
               }
 
               <div onClick={() => setOpenAddField(true)} className=' hover:bg-primary-200 bg-white py-1 px-3 w-32 text-center font-semibold border border-primary-200 hover:text-neutral-900 cursor-pointer rounded'>
-                Add Fields
+                Thêm trường
               </div>
 
               <button
                 className='bg-primary-100 hover:bg-primary-200 py-2 rounded font-semibold'
               >
-                Update Product
+                Cập nhật sản phẩm
               </button>
             </form>
           </div>

@@ -6,6 +6,7 @@ import { FaArrowLeft } from "react-icons/fa";
 import useMobile from '../hooks/useMobile';
 
 
+
 const Search = () => {
     const navigate = useNavigate()
     const location = useLocation()
@@ -53,23 +54,17 @@ const Search = () => {
                         <TypeAnimation
                                 sequence={[
                                     // Same substring at the start will only be typed out once, initially
-                                    'Search "milk"',
+                                    'Thử tìm "Má hồng"',
                                     1000, // wait 1s before replacing "Mice" with "Hamsters"
-                                    'Search "bread"',
+                                    'Thử tìm "Son"',
                                     1000,
-                                    'Search "sugar"',
+                                    'Thử tìm "Mascara"',
                                     1000,
-                                    'Search "panner"',
+                                    'Thử tìm "Nền"',
                                     1000,
-                                    'Search "chocolate"',
+                                    'Thử tìm "Cushion"',
                                     1000,
-                                    'Search "curd"',
-                                    1000,
-                                    'Search "rice"',
-                                    1000,
-                                    'Search "egg"',
-                                    1000,
-                                    'Search "chips"',
+                                    
                                 ]}
                                 wrapper="span"
                                 speed={50}
@@ -81,7 +76,7 @@ const Search = () => {
                     <div className='w-full h-full'>
                         <input
                             type='text'
-                            placeholder='Search for atta dal and more.'
+                            placeholder='Nhập tên sản phẩm bạn muốn tìm...'
                             autoFocus
                             defaultValue={searchText}
                             className='bg-transparent w-full h-full outline-none'

@@ -62,10 +62,10 @@ const OtpVerification = () => {
     return (
         <section className='w-full container mx-auto px-2'>
             <div className='bg-white my-4 w-full max-w-lg mx-auto rounded p-7'>
-                <p className='font-semibold text-lg'>Enter OTP</p>
+                <p className='font-semibold text-lg'>Nhập OTP</p>
                 <form className='grid gap-4 py-4' onSubmit={handleSubmit}>
                     <div className='grid gap-1'>
-                        <label htmlFor='otp'>Enter Your OTP :</label>
+                        <label htmlFor='otp'>Nhập mã OTP của bạn :</label>
                         <div className='flex items-center gap-2 justify-between mt-3'>
                             {
                                 data.map((element,index)=>{
@@ -103,12 +103,12 @@ const OtpVerification = () => {
                         
                     </div>
              
-                    <button disabled={!valideValue} className={` ${valideValue ? "bg-green-800 hover:bg-green-700" : "bg-gray-500" }    text-white py-2 rounded font-semibold my-3 tracking-wide`}>Verify OTP</button>
+                    <button disabled={!valideValue} className={` ${valideValue ? "bg-green-800 hover:bg-green-700" : "bg-gray-500" }    text-white py-2 rounded font-semibold my-3 tracking-wide`}>Xác thực OTP</button>
 
                 </form>
 
                 <p>
-                    Already have account? <Link to={"/login"} className='font-semibold text-green-700 hover:text-green-800'>Login</Link>
+                    Đã có tài khoản? <Link to={"/login"} className='font-semibold text-green-700 hover:text-green-800'>Đăng nhập</Link>
                 </p>
             </div>
         </section>

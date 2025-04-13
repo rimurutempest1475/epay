@@ -1,0 +1,32 @@
+.payment-methods {
+    display: flex;
+    gap: 1rem;
+    margin-top: 2rem;
+}
+
+.payment-button {
+    padding: 1rem 2rem;
+    border: none;
+    border-radius: 8px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.stripe-button {
+    background-color: #635bff;
+    color: white;
+}
+
+.stripe-button:hover {
+    background-color: #4b44d1;
+}
+
+.momo-button {
+    background-color: #ae2070;
+    color: white;
+}
+
+.momo-button:hover {
+    background-color: #8e1a5c;
+} 

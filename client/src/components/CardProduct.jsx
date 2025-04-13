@@ -54,7 +54,7 @@ const CardProduct = ({data}) => {
         <div className=''>
           {
             data.stock == 0 ? (
-              <p className='text-red-500 text-sm text-center'>Out of stock</p>
+              <p className='text-red-500 text-sm text-center'>Sản phẩm hết hàng</p>
             ) : (
               <AddToCartButton data={data} />
             )

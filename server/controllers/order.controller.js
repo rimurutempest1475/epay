@@ -4,10 +4,10 @@ import OrderModel from "../models/order.model.js";
 import UserModel from "../models/user.model.js";
 import mongoose from "mongoose";
 
- export async function CashOnDeliveryOrderController(request,response){
+export async function CashOnDeliveryOrderController(request,response){
     try {
         const userId = request.userId // auth middleware 
-        const { list_items, totalAmt, addressId,subTotalAmt } = request.body 
+        const { list_items, totalAmt, addressId, subTotalAmt } = request.body 
 
         const payload = list_items.map(el => {
             return({
@@ -17,10 +17,12 @@ import mongoose from "mongoose";
                 product_details : {
                     name : el.productId.name,
                     image : el.productId.image
-                } ,
+                },
                 paymentId : "",
-                payment_status : "CASH ON DELIVERY",
-                delivery_address : addressId ,
+                paymentMethod: "CASH ON DELIVERY",
+                payment_status : "PENDING",
+                status: "PROCESSING", // Đơn hàng COD mặc định là PROCESSING
+                delivery_address : addressId,
                 subTotalAmt  : subTotalAmt,
                 totalAmt  :  totalAmt,
             })
@@ -41,18 +43,24 @@ import mongoose from "mongoose";
 
     } catch (error) {
         return response.status(500).json({
-            message : error.message || error ,
+            message : error.message || error,
             error : true,
             success : false
         })
     }
 }
 
-export const pricewithDiscount = (price,dis = 1)=>{
-    const discountAmout = Math.ceil((Number(price) * Number(dis)) / 100)
-    const actualPrice = Number(price) - Number(discountAmout)
-    return actualPrice
-}
+export const pricewithDiscount = (price, discountPercentage = 0) => {  
+    const priceNumber = Number(price);  
+    const discountNumber = Number(discountPercentage);  
+
+    const discountAmount = (priceNumber * discountNumber) / 100;  
+    const actualPrice = priceNumber - discountAmount;  
+
+    console.log(`Giá gốc: ${priceNumber} VNĐ, Giảm giá: ${discountNumber}%, Số tiền giảm: ${discountAmount} VNĐ, Giá thực tế: ${actualPrice} VNĐ`);  
+
+    return Math.max(actualPrice, 0);  
+};  
 
 export async function paymentController(request,response){
     try {
@@ -64,7 +72,7 @@ export async function paymentController(request,response){
         const line_items  = list_items.map(item =>{
             return{
                price_data : {
-                    currency : 'inr',
+                    currency : 'vnd',
                     product_data : {
                         name : item.productId.name,
                         images : item.productId.image,
@@ -72,7 +80,7 @@ export async function paymentController(request,response){
                             productId : item.productId._id
                         }
                     },
-                    unit_amount : pricewithDiscount(item.productId.price,item.productId.discount) * 100   
+                    unit_amount : pricewithDiscount(item.productId.price,item.productId.discount)// * 100   
                },
                adjustable_quantity : {
                     enabled : true,
@@ -146,43 +154,108 @@ const getOrderProductItems = async({
 }
 
 //http://localhost:8080/api/order/webhook
-export async function webhookStripe(request,response){
-    const event = request.body;
-    const endPointSecret = process.env.STRIPE_ENPOINT_WEBHOOK_SECRET_KEY
-
-    console.log("event",event)
-
-    // Handle the event
-  switch (event.type) {
-    case 'checkout.session.completed':
-      const session = event.data.object;
-      const lineItems = await Stripe.checkout.sessions.listLineItems(session.id)
-      const userId = session.metadata.userId
-      const orderProduct = await getOrderProductItems(
-        {
-            lineItems : lineItems,
-            userId : userId,
-            addressId : session.metadata.addressId,
-            paymentId  : session.payment_intent,
-            payment_status : session.payment_status,
-        })
-    
-      const order = await OrderModel.insertMany(orderProduct)
-
-        console.log(order)
-        if(Boolean(order[0])){
-            const removeCartItems = await  UserModel.findByIdAndUpdate(userId,{
-                shopping_cart : []
-            })
-            const removeCartProductDB = await CartProductModel.deleteMany({ userId : userId})
+export async function webhookStripe(request, response) {
+    try {
+        console.log('Webhook received:', request.headers['stripe-signature']);
+        const sig = request.headers['stripe-signature'];
+        const endpointSecret = process.env.STRIPE_ENDPOINT_WEBHOOK_SECRET_KEY;
+        
+        console.log('Webhook secret:', endpointSecret ? 'Present' : 'Missing');
+        
+        let event;
+        try {
+            event = Stripe.webhooks.constructEvent(request.body, sig, endpointSecret);
+            console.log('Event constructed successfully:', event.type);
+        } catch (err) {
+            console.error(`Webhook signature verification failed:`, err.message);
+            return response.status(400).send(`Webhook Error: ${err.message}`);
         }
-      break;
-    default:
-      console.log(`Unhandled event type ${event.type}`);
-  }
 
-  // Return a response to acknowledge receipt of the event
-  response.json({received: true});
+        // Handle the event
+        switch (event.type) {
+            case 'checkout.session.completed':
+                try {
+                    console.log('Processing checkout.session.completed event');
+                    const checkoutSession = event.data.object;
+                    console.log('Payment status:', checkoutSession.payment_status);
+                    
+                    // Verify payment status - chỉ lưu đơn hàng khi thanh toán thành công
+                    if (checkoutSession.payment_status !== 'paid') {
+                        console.log('Payment not completed, not creating order');
+                        return response.json({ received: true });
+                    }
+
+                    const lineItems = await Stripe.checkout.sessions.listLineItems(checkoutSession.id);
+                    console.log('Line items retrieved:', lineItems.data.length);
+                    const userId = checkoutSession.metadata.userId;
+                    console.log('Processing order for user:', userId);
+
+                    // Get order details
+                    const orderProduct = await getOrderProductItems({
+                        lineItems: lineItems,
+                        userId: userId,
+                        addressId: checkoutSession.metadata.addressId,
+                        paymentId: checkoutSession.payment_intent,
+                        payment_status: 'PAID'
+                    });
+                    console.log('Order products prepared:', orderProduct.length);
+
+                    // Create order with transaction
+                    const dbSession = await mongoose.startSession();
+                    dbSession.startTransaction();
+
+                    try {
+                        // Insert order
+                        const order = await OrderModel.insertMany(orderProduct, { session: dbSession });
+                        console.log('Order created:', order[0]?.orderId);
+
+                        if (!order || !order[0]) {
+                            throw new Error('Failed to create order');
+                        }
+
+                        // Update user cart
+                        await UserModel.findByIdAndUpdate(
+                            userId,
+                            { shopping_cart: [] },
+                            { session: dbSession }
+                        );
+                        console.log('User cart cleared');
+
+                        // Clear cart products
+                        await CartProductModel.deleteMany(
+                            { userId: userId },
+                            { session: dbSession }
+                        );
+                        console.log('Cart products cleared');
+
+                        // Commit transaction
+                        await dbSession.commitTransaction();
+                        console.log('Transaction committed successfully');
+                    } catch (error) {
+                        console.error('Transaction failed:', error);
+                        await dbSession.abortTransaction();
+                        throw error;
+                    } finally {
+                        await dbSession.endSession();
+                    }
+                } catch (error) {
+                    console.error('Error processing order:', error);
+                }
+                break;
+
+            default:
+                console.log(`Unhandled event type ${event.type}`);
+        }
+
+        return response.json({ received: true });
+    } catch (error) {
+        console.error('Webhook processing error:', error);
+        return response.status(500).json({
+            message: 'Internal server error',
+            error: true,
+            success: false
+        });
+    }
 }
 
 
@@ -206,3 +279,37 @@ export async function getOrderDetailsController(request,response){
         })
     }
 }
+
+export const getOrderStatusController = async (req, res) => {
+    try {
+        const { orderId } = req.query;
+        
+        if (!orderId) {
+            return res.status(400).json({
+                message: 'Thiếu orderId',
+                error: true
+            });
+        }
+        
+        const order = await OrderModel.findOne({ orderId });
+        
+        if (!order) {
+            return res.status(404).json({
+                message: 'Không tìm thấy đơn hàng',
+                error: true
+            });
+        }
+        
+        return res.json({
+            orderId: order.orderId,
+            paymentStatus: order.paymentStatus || order.payment_status,
+            status: order.status
+        });
+    } catch (error) {
+        console.error('Error checking order status:', error);
+        return res.status(500).json({
+            message: 'Lỗi server khi kiểm tra trạng thái đơn hàng',
+            error: true
+        });
+    }
+};

@@ -62,7 +62,7 @@ const EditAddressDetails = ({close, data}) => {
             </div>
             <form className='mt-4 grid gap-4' onSubmit={handleSubmit(onSubmit)}>
                 <div className='grid gap-1'>
-                    <label htmlFor='addressline'>Address Line :</label>
+                    <label htmlFor='addressline'>Địa chỉ :</label>
                     <input
                         type='text'
                         id='addressline' 
@@ -71,7 +71,7 @@ const EditAddressDetails = ({close, data}) => {
                     />
                 </div>
                 <div className='grid gap-1'>
-                    <label htmlFor='city'>City :</label>
+                    <label htmlFor='city'>Thành phố/Quận/Huyện :</label>
                     <input
                         type='text'
                         id='city' 
@@ -80,7 +80,7 @@ const EditAddressDetails = ({close, data}) => {
                     />
                 </div>
                 <div className='grid gap-1'>
-                    <label htmlFor='state'>State :</label>
+                    <label htmlFor='state'>Thành phố/Tỉnh :</label>
                     <input
                         type='text'
                         id='state' 
@@ -98,7 +98,7 @@ const EditAddressDetails = ({close, data}) => {
                     />
                 </div>
                 <div className='grid gap-1'>
-                    <label htmlFor='country'>Country :</label>
+                    <label htmlFor='country'>Quốc Gia :</label>
                     <input
                         type='text'
                         id='country' 
@@ -107,7 +107,7 @@ const EditAddressDetails = ({close, data}) => {
                     />
                 </div>
                 <div className='grid gap-1'>
-                    <label htmlFor='mobile'>Mobile No. :</label>
+                    <label htmlFor='mobile'>Số điện thoại :</label>
                     <input
                         type='text'
                         id='mobile' 

@@ -149,16 +149,16 @@ const UploadProduct = () => {
   return (
     <section className=''>
         <div className='p-2   bg-white shadow-md flex items-center justify-between'>
-            <h2 className='font-semibold'>Upload Product</h2>
+            <h2 className='font-semibold'>Tải lên sản phẩm mới</h2>
         </div>
         <div className='grid p-3'>
             <form className='grid gap-4' onSubmit={handleSubmit}>
                 <div className='grid gap-1'>
-                  <label htmlFor='name' className='font-medium'>Name</label>
+                  <label htmlFor='name' className='font-medium'>Tên sản phẩm</label>
                   <input 
                     id='name'
                     type='text'
-                    placeholder='Enter product name'
+                    placeholder='Chỗ này nhập tên sp thôi nha'
                     name='name'
                     value={data.name}
                     onChange={handleChange}
@@ -167,11 +167,11 @@ const UploadProduct = () => {
                   />
                 </div>
                 <div className='grid gap-1'>
-                  <label htmlFor='description' className='font-medium'>Description</label>
+                  <label htmlFor='description' className='font-medium'>Mô tả sản phẩm</label>
                   <textarea 
                     id='description'
                     type='text'
-                    placeholder='Enter product description'
+                    placeholder='Nhập ngắn gọn cũng đc'
                     name='description'
                     value={data.description}
                     onChange={handleChange}
@@ -182,7 +182,7 @@ const UploadProduct = () => {
                   />
                 </div>
                 <div>
-                    <p className='font-medium'>Image</p>
+                    <p className='font-medium'>Ảnh sản phẩm</p>
                     <div>
                       <label htmlFor='productImage' className='bg-blue-50 h-24 border rounded flex justify-center items-center cursor-pointer'>
                           <div className='text-center flex justify-center items-center flex-col'>
@@ -190,7 +190,7 @@ const UploadProduct = () => {
                               imageLoading ?  <Loading/> : (
                                 <>
                                    <FaCloudUploadAlt size={35}/>
-                                   <p>Upload Image</p>
+                                   <p>Tải ảnh lên</p>
                                 </>
                               )
                             }
@@ -227,7 +227,7 @@ const UploadProduct = () => {
 
                 </div>
                 <div className='grid gap-1'>
-                  <label className='font-medium'>Category</label>
+                  <label className='font-medium'>Danh mục sản phẩm</label>
                   <div>
                     <select
                       className='bg-blue-50 border w-full p-2 rounded'
@@ -245,7 +245,7 @@ const UploadProduct = () => {
                         setSelectCategory("")
                       }}
                     >
-                      <option value={""}>Select Category</option>
+                      <option value={""}>Lựa chọn danh mục</option>
                       {
                         allCategory.map((c,index)=>{
                           return(
@@ -271,7 +271,7 @@ const UploadProduct = () => {
                   </div>
                 </div>
                 <div className='grid gap-1'>
-                  <label className='font-medium'>Sub Category</label>
+                  <label className='font-medium'>Danh mục phụ</label>
                   <div>
                     <select
                       className='bg-blue-50 border w-full p-2 rounded'
@@ -289,7 +289,7 @@ const UploadProduct = () => {
                         setSelectSubCategory("")
                       }}
                     >
-                      <option value={""} className='text-neutral-600'>Select Sub Category</option>
+                      <option value={""} className='text-neutral-600'>Lựa chọn danh mục phụ</option>
                       {
                         allSubCategory.map((c,index)=>{
                           return(
@@ -316,11 +316,11 @@ const UploadProduct = () => {
                 </div>
 
                 <div className='grid gap-1'>
-                  <label htmlFor='unit' className='font-medium'>Unit</label>
+                  <label htmlFor='unit' className='font-medium'>Đơn vị tính</label>
                   <input 
                     id='unit'
                     type='text'
-                    placeholder='Enter product unit'
+                    placeholder='Cái/bịch/túi/sản phẩm ...'
                     name='unit'
                     value={data.unit}
                     onChange={handleChange}
@@ -330,11 +330,11 @@ const UploadProduct = () => {
                 </div>
 
                 <div className='grid gap-1'>
-                  <label htmlFor='stock' className='font-medium'>Number of Stock</label>
+                  <label htmlFor='stock' className='font-medium'>Lượng hàng tồn kho</label>
                   <input 
                     id='stock'
                     type='number'
-                    placeholder='Enter product stock'
+                    placeholder='Nhập đại, trên 0 là đc'
                     name='stock'
                     value={data.stock}
                     onChange={handleChange}
@@ -344,11 +344,11 @@ const UploadProduct = () => {
                 </div>
 
                 <div className='grid gap-1'>
-                  <label htmlFor='price' className='font-medium'>Price</label>
+                  <label htmlFor='price' className='font-medium'>Giá sản phẩm</label>
                   <input 
                     id='price'
                     type='number'
-                    placeholder='Enter product price'
+                    placeholder='Nhập giá trước giảm'
                     name='price'
                     value={data.price}
                     onChange={handleChange}
@@ -358,11 +358,11 @@ const UploadProduct = () => {
                 </div>
 
                 <div className='grid gap-1'>
-                  <label htmlFor='discount' className='font-medium'>Discount</label>
+                  <label htmlFor='discount' className='font-medium'>% giảm giá</label>
                   <input 
                     id='discount'
                     type='number'
-                    placeholder='Enter product discount'
+                    placeholder='Nhập số'
                     name='discount'
                     value={data.discount}
                     onChange={handleChange}
@@ -403,13 +403,13 @@ const UploadProduct = () => {
                   }
 
                 <div onClick={()=>setOpenAddField(true)} className=' hover:bg-primary-200 bg-white py-1 px-3 w-32 text-center font-semibold border border-primary-200 hover:text-neutral-900 cursor-pointer rounded'>
-                  Add Fields
+                  Thêm trường mới
                 </div>
 
                 <button
                   className='bg-primary-100 hover:bg-primary-200 py-2 rounded font-semibold'
                 >
-                  Submit
+                  Hoàn tất & Upload
                 </button>
             </form>
         </div>
