@@ -3,7 +3,7 @@ import SummaryApi , { baseURL } from "../common/SummaryApi";
 
 const instance = axios.create({
     baseURL: process.env.NODE_ENV === 'production' 
-        ? 'https://your-app.onrender.com'  // Thay thế bằng URL Render của bạn
+        ? 'https://epay-server.onrender.com'  // URL backend trên Render
         : 'http://localhost:8080',
     withCredentials: true,
     timeout: 10000,

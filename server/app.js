@@ -11,10 +11,15 @@ const app = express();
 dotenv.config();
 
 // Middleware
-app.use(cors({
+const corsOptions = {
   origin: [process.env.FRONTEND_URL, 'https://epay-client.onrender.com'],
-  credentials: true
-}));
+  credentials: true,
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+  allowedHeaders: ['Content-Type', 'Authorization'],
+  exposedHeaders: ['Content-Range', 'X-Content-Range']
+};
+
+app.use(cors(corsOptions));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
