@@ -13,8 +13,12 @@ const config = {
     accessKey: process.env.MOMO_ACCESS_KEY,
     secretKey: process.env.MOMO_SECRET_KEY,
     endpoint: "https://payment.momo.vn/v2/gateway/api/create",
-    redirectUrl: "http://localhost:5173/order/success",
-    ipnUrl: "http://localhost:5173/api/order/momo-webhook",
+    redirectUrl: process.env.NODE_ENV === 'production' 
+        ? "https://epay-client.onrender.com/order/success"
+        : "http://localhost:5173/order/success",
+    ipnUrl: process.env.NODE_ENV === 'production'
+        ? "https://epay-server.onrender.com/api/momo/momo-webhook"
+        : "http://localhost:8080/api/momo/momo-webhook",
 };
 
 console.log('MoMo Config:', {
