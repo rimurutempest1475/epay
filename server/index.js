@@ -15,6 +15,7 @@ import addressRouter from './route/address.route.js'
 import orderRouter from './route/order.route.js'
 import momoRouter from './route/momo.route.js'
 import vnpayRoute from "./route/vnpay.route.js"
+import cryptoRouter from './route/cryptoPayment.route.js'
 
 dotenv.config()
 const app = express()
@@ -49,6 +50,7 @@ app.use('/api/address', addressRouter)
 app.use('/api/order', orderRouter)
 app.use('/api/momo', momoRouter)
 app.use('/api/vnpay', vnpayRoute)
+app.use('/api/crypto', cryptoRouter)
 
 const PORT = process.env.PORT || 8080
 

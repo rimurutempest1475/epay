@@ -4,7 +4,7 @@ import dotenv from 'dotenv';
 import mongoose from 'mongoose';
 import orderRoutes from './route/order.route.js';
 import momoRoutes from './route/momo.route.js';
-import cryptoPaymentRoutes from './route/cryptoPayment.route.js';
+import cryptoRouter from './route/cryptoPayment.route.js';
 import vnpayRoutes from './route/vnpay.route.js';
 // ... other imports
 
@@ -27,7 +27,7 @@ app.use(express.urlencoded({ extended: true }));
 // Routes
 app.use('/api/order', orderRoutes);
 app.use('/api/momo', momoRoutes);
-app.use('/api/crypto', cryptoPaymentRoutes);
+app.use('/api/crypto', cryptoRouter);
 app.use('/api/vnpay', vnpayRoutes);
 // ... other routes
 

@@ -4,6 +4,7 @@ import {
     CREATE_ORDER_SUCCESS,
     CREATE_ORDER_FAIL,
 } from '../constants/orderConstant';
+import { toast } from 'react-hot-toast';
 
 export const createOrder = (orderData) => async (dispatch) => {
     try {
@@ -104,27 +105,43 @@ export const createCryptoPayment = (orderData) => async (dispatch) => {
     try {
         dispatch({ type: CREATE_ORDER_REQUEST });
 
-        const { data } = await instance.post("/api/crypto/create-charge", {
-            list_items: orderData.list_items,
-            addressId: orderData.addressId,
-            totalAmt: orderData.totalAmt
-        });
+        console.log('Creating crypto payment:', orderData);
 
-        if (data.data && data.data.hosted_url) {
-            window.location.href = data.data.hosted_url;
+        // Format data
+        const requestData = {
+            list_items: Array.isArray(orderData.list_items) 
+                ? orderData.list_items.map(item => ({
+                    productId: item.productId?._id || item.productId,
+                    quantity: item.quantity,
+                    price: item.price || item.productId?.price
+                  }))
+                : [],
+            addressId: orderData.addressId,
+            totalAmt: orderData.totalAmt || orderData.subTotalAmt
+        };
+
+        console.log('Sending request with data:', requestData);
+
+        const response = await instance.post("/api/crypto/create-charge", requestData);
+
+        console.log('Crypto payment response:', response.data);
+
+        if (response.data.success && response.data.data.data.hosted_url) {
+            window.location.href = response.data.data.data.hosted_url;
         } else {
             throw new Error('No hosted_url received from Coinbase');
         }
 
         dispatch({
             type: CREATE_ORDER_SUCCESS,
-            payload: orderData,
+            payload: response.data
         });
     } catch (error) {
         console.error('Crypto payment error:', error);
+        toast.error('Payment failed: ' + (error.response?.data?.error || error.message));
         dispatch({
             type: CREATE_ORDER_FAIL,
-            payload: error.response?.data?.message || error.message,
+            payload: error.response?.data?.message || error.message
         });
     }
 }; 
