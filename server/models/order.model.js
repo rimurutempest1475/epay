@@ -7,12 +7,28 @@ const orderSchema = new mongoose.Schema({
     },
     orderId : {
         type : String,
-        required : [true, "Provide orderId"],
-        unique : true
+        default: function() {
+            return `ORDER-${Date.now()}-${Math.floor(Math.random() * 1000)}`;
+        }
     },
-    productId : {
-        type : mongoose.Schema.ObjectId,
-        ref : "product"
+    list_items: [{
+        productId: {
+            type: mongoose.Schema.ObjectId,
+            ref: 'product'
+        },
+        quantity: {
+            type: Number,
+            required: true
+        },
+        price: {
+            type: Number,
+            required: true
+        }
+    }],
+    paymentMethod: {
+        type: String,
+        enum: ['cash', 'stripe', 'momo', 'crypto', 'vnpay'],
+        default: 'cash'
     },
     product_details : {
         name : String,

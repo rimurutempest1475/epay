@@ -29,25 +29,25 @@ router.post('/create-charge', auth, async (req, res) => {
         const { list_items, addressId, totalAmt } = req.body;
         const userId = req.userId;
 
-        console.log('Creating payment with:', {
-            userId,
-            addressId,
-            totalAmt
-        });
-
-        // Tạo đơn hàng trong database
+        // Tạo orderId duy nhất
+        const orderId = `CRYPTO-${Date.now()}-${Math.floor(Math.random() * 1000)}`;
+        
+        // Lấy sản phẩm đầu tiên từ list_items (giả sử chỉ có 1 sản phẩm)
+        const firstItem = list_items[0];
+        
+        // Tạo đơn hàng theo schema hiện tại
         const order = new Order({
             userId,
-            list_items,
-            addressId,
-            totalAmt,
-            paymentMethod: 'crypto',
-            paymentStatus: 'pending',
-            orderStatus: 'pending'
+            orderId,
+            productId: firstItem.productId,
+            delivery_address: addressId,
+            subTotalAmt: totalAmt,
+            totalAmt: totalAmt,
+            payment_status: 'pending'
         });
 
         await order.save();
-        console.log('Order created:', order._id);
+        console.log('Order created with ID:', order._id);
 
         // Tạo charge với Coinbase Commerce API
         const chargeData = {
@@ -88,11 +88,11 @@ router.post('/create-charge', auth, async (req, res) => {
             data: response.data
         });
     } catch (error) {
-        console.error('Error creating charge:', error.response?.data || error.message);
+        console.error('Error creating charge:', error);
         res.status(500).json({
             success: false,
             error: 'Failed to create charge',
-            details: error.response?.data || error.message
+            details: error.message
         });
     }
 });
