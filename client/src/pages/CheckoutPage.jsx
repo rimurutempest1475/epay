@@ -295,20 +295,7 @@ const CheckoutPage = () => {
                     </label>
                 </div>
 
-                <div className="flex items-center gap-2">
-                    <input
-                        type="radio"
-                        name="payment"
-                        id="stripe"
-                        value="stripe"
-                        checked={paymentMethod === "stripe"}
-                        onChange={(e) => setPaymentMethod(e.target.value)}
-                        className="form-radio"
-                    />
-                    <label htmlFor="stripe" className="text-gray-700">
-                        Thanh toán qua Stripe
-                    </label>
-                </div>
+               
 
                 <div className="flex items-center gap-2">
                     <input
