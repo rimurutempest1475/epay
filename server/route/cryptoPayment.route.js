@@ -9,8 +9,29 @@ dotenv.config();
 
 const router = express.Router();
 
-// Cấu hình API key
-const API_KEY = process.env.COINBASE_TEST_API_KEY || 'your_test_api_key';
+// Tỷ giá VND sang USD (cố định)
+const VND_TO_USD_RATE = 0.000041; // 1 VND ≈ 0.000041 USD (tỷ giá tham khảo)
+
+// Hàm chuyển đổi VND sang USD
+const convertVNDtoUSD = async (amountVND) => {
+    try {
+        // Cách 1: Dùng Fixed Rate (nhanh, đơn giản nhưng không chính xác theo thời gian thực)
+        return parseFloat((amountVND * VND_TO_USD_RATE).toFixed(2));
+
+        // Cách 2: Dùng Exchange Rate API (chính xác nhưng phức tạp hơn)
+        // Uncomment code dưới đây và thay API_KEY bằng key của bạn nếu muốn dùng API
+        /*
+        const response = await axios.get(
+            `https://v6.exchangerate-api.com/v6/YOUR_API_KEY/pair/VND/USD/${amountVND}`
+        );
+        return parseFloat(response.data.conversion_result.toFixed(2));
+        */
+    } catch (error) {
+        console.error('Error converting currency:', error);
+        // Fallback to fixed rate if API fails
+        return parseFloat((amountVND * VND_TO_USD_RATE).toFixed(2));
+    }
+};
 
 // Cấu hình URL dựa trên môi trường
 const FRONTEND_URL = process.env.NODE_ENV === 'production'
@@ -29,42 +50,47 @@ router.post('/create-charge', auth, async (req, res) => {
         const { list_items, addressId, totalAmt } = req.body;
         const userId = req.userId;
 
+        // Chuyển đổi totalAmt từ VND sang USD
+        const totalAmtVND = parseFloat(totalAmt);
+        const totalAmtUSD = await convertVNDtoUSD(totalAmtVND);
+
+        console.log(`Converting ${totalAmtVND} VND to ${totalAmtUSD} USD`);
+
         // Tạo orderId duy nhất
         const orderId = `CRYPTO-${Date.now()}-${Math.floor(Math.random() * 1000)}`;
         
-        // Lấy sản phẩm đầu tiên từ list_items (giả sử chỉ có 1 sản phẩm)
+        // Lấy sản phẩm đầu tiên từ list_items 
         const firstItem = list_items[0];
         
-        // Tạo đơn hàng theo schema hiện tại
+        // Tạo đơn hàng theo schema hiện tại - Lưu VND trong database
         const order = new Order({
             userId,
             orderId,
             productId: firstItem.productId,
             delivery_address: addressId,
-            subTotalAmt: totalAmt,
-            totalAmt: totalAmt,
+            subTotalAmt: totalAmtVND, // Giữ VND cho DB
+            totalAmt: totalAmtVND,    // Giữ VND cho DB
             payment_status: 'pending'
         });
 
         await order.save();
         console.log('Order created with ID:', order._id);
 
-        // Tạo charge với Coinbase Commerce API
+        // Tạo charge với Coinbase Commerce API - sử dụng USD
         const chargeData = {
-            name: `Order #${order._id}`,
-            description: 'Test payment',
+            name: `Order #${orderId}`,
+            description: 'Payment for e-commerce order',
             pricing_type: 'fixed_price',
             local_price: {
-                amount: totalAmt.toString(),
+                amount: totalAmtUSD.toString(), // USD amount
                 currency: 'USD'
             },
             metadata: {
-                orderId: order._id.toString()
+                orderId: orderId,
+                originalAmountVND: totalAmtVND // Lưu lại số tiền VND gốc
             },
-            redirect_url: `${FRONTEND_URL}/order/success`,
-            cancel_url: `${FRONTEND_URL}/order/cancel`,
-            // URL webhook (cần thiết lập trên Coinbase Dashboard)
-            webhook_url: `${BACKEND_URL}/api/crypto/webhook`
+            redirect_url: `${process.env.FRONTEND_URL}/order/success`,
+            cancel_url: `${process.env.FRONTEND_URL}/order/cancel`,
         };
 
         console.log('Charge data:', chargeData);
@@ -74,7 +100,7 @@ router.post('/create-charge', auth, async (req, res) => {
             chargeData,
             {
                 headers: {
-                    'X-CC-Api-Key': API_KEY,
+                    'X-CC-Api-Key': process.env.COINBASE_TEST_API_KEY,
                     'X-CC-Version': '2018-03-22',
                     'Content-Type': 'application/json'
                 }
@@ -85,7 +111,12 @@ router.post('/create-charge', auth, async (req, res) => {
 
         res.json({
             success: true,
-            data: response.data
+            data: response.data,
+            conversionRate: {
+                vnd: totalAmtVND,
+                usd: totalAmtUSD,
+                rate: VND_TO_USD_RATE
+            }
         });
     } catch (error) {
         console.error('Error creating charge:', error);

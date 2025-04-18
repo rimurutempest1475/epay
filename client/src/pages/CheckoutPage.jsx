@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import { useGlobalContext } from '../provider/GlobalProvider'
 import { DisplayPriceInRupees } from '../utils/DisplayPriceInRupees'
 import AddAddress from '../components/AddAddress'
@@ -22,6 +22,7 @@ const CheckoutPage = () => {
   const dispatch = useDispatch()
   const [isLoading, setIsLoading] = useState(false)
   const [paymentMethod, setPaymentMethod] = useState("cash")
+  const [convertedAmount, setConvertedAmount] = useState(null);
 
   // Xử lý "Thanh toán khi nhận hàng"
   const handleCashOnDelivery = async() => {
@@ -198,6 +199,19 @@ const CheckoutPage = () => {
     }
   };
 
+  // Thêm hàm chuyển đổi
+  const convertToUSD = (amountVND) => {
+    const rate = 0.000041; // 1 VND ≈ 0.000041 USD
+    return (amountVND * rate).toFixed(2);
+  };
+
+  // Trong useEffect hoặc mỗi khi totalPrice thay đổi
+  useEffect(() => {
+    if (totalPrice) {
+        setConvertedAmount(convertToUSD(totalPrice));
+    }
+  }, [totalPrice]);
+
   return (
     <section className='bg-blue-50'>
       <div className='container mx-auto p-4 flex flex-col lg:flex-row w-full gap-5 justify-between'>
@@ -238,11 +252,13 @@ const CheckoutPage = () => {
             <h3 className='font-semibold'>Chi tiết hóa đơn:</h3>
             <div className='flex gap-4 justify-between ml-1'>
               <p>Tổng tiền</p>
-              <p className='flex items-center gap-2'>
-                <span className='line-through text-neutral-400'>
-                  {DisplayPriceInRupees(notDiscountTotalPrice)}
-                </span>
-                <span>{DisplayPriceInRupees(totalPrice)}</span>
+              <p className="flex flex-col items-end">
+                <span>{DisplayPriceInRupees(totalPrice)} VND</span>
+                {paymentMethod === 'crypto' && (
+                  <span className="text-sm text-gray-500">
+                    ~ ${convertedAmount} USD (Thanh toán bằng crypto)
+                  </span>
+                )}
               </p>
             </div>
             <div className='flex gap-4 justify-between ml-1'>

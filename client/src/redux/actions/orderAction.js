@@ -107,26 +107,30 @@ export const createCryptoPayment = (orderData) => async (dispatch) => {
 
         console.log('Creating crypto payment:', orderData);
 
-        // Format data
         const requestData = {
-            list_items: Array.isArray(orderData.list_items) 
-                ? orderData.list_items.map(item => ({
-                    productId: item.productId?._id || item.productId,
-                    quantity: item.quantity,
-                    price: item.price || item.productId?.price
-                  }))
-                : [],
+            list_items: orderData.list_items,
             addressId: orderData.addressId,
             totalAmt: orderData.totalAmt || orderData.subTotalAmt
         };
-
-        console.log('Sending request with data:', requestData);
 
         const response = await instance.post("/api/crypto/create-charge", requestData);
 
         console.log('Crypto payment response:', response.data);
 
-        if (response.data.success && response.data.data.data.hosted_url) {
+        // Hiển thị thông tin chuyển đổi tiền tệ (sửa từ toast.info thành toast)
+        if (response.data.conversionRate) {
+            // Sử dụng toast() thay vì toast.info() vì react-hot-toast không có phương thức info
+            toast(`Chuyển đổi: ${response.data.conversionRate.vnd.toLocaleString('vi-VN')} VND = ${response.data.conversionRate.usd} USD`, {
+                duration: 5000,
+                // Tùy chỉnh style để giống toast info
+                style: {
+                    background: '#3498db',
+                    color: 'white',
+                }
+            });
+        }
+
+        if (response.data.success && response.data.data.data?.hosted_url) {
             window.location.href = response.data.data.data.hosted_url;
         } else {
             throw new Error('No hosted_url received from Coinbase');
@@ -138,10 +142,10 @@ export const createCryptoPayment = (orderData) => async (dispatch) => {
         });
     } catch (error) {
         console.error('Crypto payment error:', error);
-        toast.error('Payment failed: ' + (error.response?.data?.error || error.message));
+        toast.error(error.response?.data?.error || 'Payment creation failed');
         dispatch({
             type: CREATE_ORDER_FAIL,
             payload: error.response?.data?.message || error.message
         });
     }
-}; 
+};
